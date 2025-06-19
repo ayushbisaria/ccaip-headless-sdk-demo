@@ -32,11 +32,12 @@ The project is organized into two main directories:
 │       └── style.css
 ├── Readme.md
 └── server/
-├── config/
-├── node_modules/
-├── package.json
-├── package-lock.json
-└── server.js
+    ├── config
+    ├── node_modules
+    ├── package.json
+    ├── package-lock.json
+    └── server.js
+
 ```
 
 
