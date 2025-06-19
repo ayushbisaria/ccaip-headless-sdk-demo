@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat Application</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="src/style.css">
+    <link rel="icon" type="image/png" href="favicon.png">
+    <script type="module" src="src/main.js" defer></script>
+</head>
+<body>
+    <div class="landing-container">
+        <header class="page-header">
+            <h1>CCAIP Headless SDK</h1>
+            <p>A live demonstration of a custom chat interface.</p>
+            <div class="instructions">Click the chat icon to talk to our team.</div>
+        </header>
+    </div>
+
+    <button id="startChatBtn" class="chat-widget-button" title="Start Chat">
+        <span class="chat-icon">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path></svg>
+        </span>
+        <div class="loader"></div>
+    </button>
+
+    <div id="chatWindow" class="chat-window">
+        <div class="chat-header">
+            <h3>Live Chat</h3>
+            <button id="closeChatBtn" class="close-chat-btn" title="End Chat">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            </button>
+        </div>
+        <div id="chat-messages" class="chat-messages"></div>
+        <div class="chat-input-area">
+            <input type="text" id="chat-input" placeholder="Type a message...">
+            <input type="file" id="attachment-input" style="display: none;" accept=".jpg,.jpeg,.png,.mp4">
+            <label for="attachment-input" class="attachment-button">📎</label> 
+            <button id="send-message-btn">Send</button>
+        </div>
+    </div>
+</body>
+</html>
