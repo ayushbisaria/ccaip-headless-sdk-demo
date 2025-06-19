@@ -106,8 +106,9 @@ There are two ways to run the application:
 
 This method uses `concurrently` to start both the backend and frontend simultaneously. This is the easiest way to get everything running.
 
-1.  From the **root directory** of your project (`my-fullstack-app/`), run:
+1.  From the **root directory** of your project (`ccaas-headless-sdk-demo/`), run:
     ```bash
+    npm install
     npm run dev
     ```
     This command will:
