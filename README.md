@@ -15,7 +15,6 @@ This repository contains a demonstration of a chat application built using a CCA
 ## 📁 Project Structure
 
 The project is organized into two main directories:
-
 .
 ├── client/
 │   ├── favicon23.png
@@ -37,6 +36,8 @@ The project is organized into two main directories:
 ├── package.json
 ├── package-lock.json
 └── server.js
+
+
 
 
 ## 📋 Prerequisites
