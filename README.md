@@ -16,6 +16,28 @@ This repository contains a demonstration of a chat application built using a CCA
 
 The project is organized into two main directories:
 
+.
+├── client/
+│   ├── favicon23.png
+│   ├── favicon.png
+│   ├── index.html
+│   ├── node_modules/
+│   ├── package.json
+│   ├── package-lock.json
+│   ├── public/
+│   │   └── vite.svg
+│   └── src/
+│       ├── javascript.svg
+│       ├── main.js
+│       └── style.css
+├── Readme.md
+└── server/
+├── config/
+├── node_modules/
+├── package.json
+├── package-lock.json
+└── server.js
+
 
 ## 📋 Prerequisites
 
