@@ -64,7 +64,7 @@ app.get('/api/get-chat-token', (req, res) => {
 });
 
 // NEW: Endpoint to provide Ujet configuration to the client
-app.get('/api/ujet-config', (req, res) => {
+app.get('/api/ccaas-config', (req, res) => {
     res.json({
         host: host,
         companyId: companyId,

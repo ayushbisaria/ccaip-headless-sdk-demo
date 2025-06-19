@@ -1,7 +1,7 @@
 import { Client } from "@ujet/websdk-headless";
 
 // --- 1. CONFIGURATION (Will be fetched from server) ---
-let ujetConfig = {}; // Object to hold the fetched configuration
+let ccaasConfig = {}; // Object to hold the fetched configuration
 
 
 // --- 2. AUTHENTICATION ---
@@ -17,15 +17,15 @@ async function authenticate() {
     }
 }
 
-// --- Function to fetch Ujet configuration from your server ---
-async function fetchUjetConfig() {
+// --- Function to fetch ccaas configuration from your server ---
+async function fetchCcaasConfig() {
     try {
-        const resp = await fetch("http://localhost:3000/api/ujet-config");
-        if (!resp.ok) throw new Error('Failed to fetch Ujet configuration');
-        ujetConfig = await resp.json();
-        console.log("Ujet Configuration fetched:", ujetConfig);
+        const resp = await fetch("http://localhost:3000/api/ccaas-config");
+        if (!resp.ok) throw new Error('Failed to fetch ccaas configuration');
+        ccaasConfig = await resp.json();
+        console.log("Ujet Configuration fetched:", ccaasConfig);
     } catch (error) {
-        console.error("Error fetching Ujet configuration:", error);
+        console.error("Error fetching ccaas configuration:", error);
         throw error; // Re-throw to stop further execution if config is critical
     }
 }
@@ -34,7 +34,7 @@ async function fetchUjetConfig() {
 async function initializeChatApp() {
     // Await fetching the configuration before proceeding
     try {
-        await fetchUjetConfig();
+        await fetchCcaasConfig();
     } catch (error) {
         // Display an error message to the user if config fetching fails
         messagesDiv.innerHTML = '<div class="system-message">Error: Could not load chat configuration. Please try again later.</div>';
@@ -44,9 +44,9 @@ async function initializeChatApp() {
 
     // --- 3. CLIENT INITIALIZATION (using fetched config) ---
     const client = new Client({
-        companyId: ujetConfig.companyId,
-        tenant: ujetConfig.tenant,
-        host: ujetConfig.host,
+        companyId: ccaasConfig.companyId,
+        tenant: ccaasConfig.tenant,
+        host: ccaasConfig.host,
         authenticate: authenticate,
     });
 
@@ -69,7 +69,7 @@ async function initializeChatApp() {
         startChatBtn.style.display = 'none';
         messagesDiv.innerHTML = '<div class="system-message">Connecting...</div>';
         // Use the menuId from the fetched configuration
-        client.createChat(ujetConfig.menuId)
+        client.createChat(ccaasConfig.menuId)
             .catch(error => {
                 console.error("Error creating chat:", error);
                 messagesDiv.innerHTML = '<div class="system-message">Error: Could not start chat.</div>';
@@ -282,92 +282,7 @@ async function initializeChatApp() {
             p.innerHTML = html;
             p.appendChild(buttonGroup);
 
-        } else if (message.ujet && message.ujet.type === 'content_card' && message.ujet.cards) {
-            p.classList.add('agent');
-
-            const senderName = (message.identity && message.identity.display_name) || 'Agent';
-            const cardsContainer = document.createElement('div');
-            cardsContainer.classList.add('content-cards-container');
-
-            message.ujet.cards.forEach(cardData => {
-                const card = document.createElement('div');
-                card.classList.add('content-card');
-
-                if (cardData.images && cardData.images.length > 0) {
-                    const img = document.createElement('img');
-                    img.src = cardData.images[0];
-                    img.alt = cardData.title || 'Card Image';
-                    card.appendChild(img);
-                }
-
-                if (cardData.title) {
-                    const title = document.createElement('h3');
-                    title.textContent = cardData.title;
-                    card.appendChild(title);
-                }
-
-                if (cardData.subtitle) {
-                    const subtitle = document.createElement('p');
-                    subtitle.classList.add('content-card-subtitle');
-                    subtitle.textContent = cardData.subtitle;
-                    card.appendChild(subtitle);
-                }
-
-                if (cardData.body) {
-                    const body = document.createElement('p');
-                    body.classList.add('content-card-body');
-                    body.textContent = cardData.body;
-                    card.appendChild(body);
-                }
-
-                if (cardData.link) {
-                    const link = document.createElement('a');
-                    link.href = cardData.link;
-                    link.textContent = 'Learn More';
-                    link.target = '_blank';
-                    card.appendChild(link);
-                }
-
-                if (cardData.buttons && cardData.buttons.length > 0) {
-                    const cardButtonGroup = document.createElement('div');
-                    cardButtonGroup.classList.add('button-group');
-
-                    cardData.buttons.forEach(buttonData => {
-                        const button = document.createElement('button');
-                        button.classList.add('chat-button', `button-style-${buttonData.style || 'default'}`);
-                        button.textContent = buttonData.title;
-
-                        button.addEventListener('click', () => {
-                            console.log(`Content Card Button '${buttonData.title}' clicked!`);
-                            if (buttonData.auto_reply) {
-                                console.log(`Sending '${buttonData.title}' as a reply.`);
-                                const userResponseP = document.createElement('p');
-                                userResponseP.classList.add('message-bubble', 'user');
-                                userResponseP.textContent = buttonData.title;
-                                messagesDiv.appendChild(userResponseP);
-                                messagesDiv.scrollTop = messagesDiv.scrollHeight;
-
-                                cardButtonGroup.querySelectorAll('.chat-button').forEach(btn => btn.disabled = true);
-
-                                client.sendTextMessage(buttonData.title)
-                                    .catch(error => {
-                                        console.error("Error sending text message:", error);
-                                    });
-                            } else {
-                                console.log("This button does not auto-reply.");
-                            }
-                        });
-                        cardButtonGroup.appendChild(button);
-                    });
-                    card.appendChild(cardButtonGroup);
-                }
-                cardsContainer.appendChild(card);
-            });
-            p.innerHTML = `<strong>${senderName}:</strong>`;
-            p.appendChild(cardsContainer);
-
-        }
-        else {
+        } else {
             if (message.identity && message.identity.is_customer) {
                 p.classList.add('user');
                 p.textContent = message.text || message.content;
