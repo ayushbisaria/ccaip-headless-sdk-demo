@@ -23,7 +23,7 @@ async function fetchCcaasConfig() {
         const resp = await fetch("http://localhost:3000/api/ccaas-config");
         if (!resp.ok) throw new Error('Failed to fetch ccaas configuration');
         ccaasConfig = await resp.json();
-        console.log("Ujet Configuration fetched:", ccaasConfig);
+        console.log("ujet Configuration fetched:", ccaasConfig);
     } catch (error) {
         console.error("Error fetching ccaas configuration:", error);
         throw error; // Re-throw to stop further execution if config is critical

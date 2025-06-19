@@ -19,7 +19,7 @@ if (!companySecret) {
     process.exit(1); // Exit if the secret is not found
 }
 if (!host || !companyId || !menuId || !tenant) {
-    console.error("Error: One or more Ujet configuration variables (HOST, COMPANY_ID, MENU_ID, TENANT) are missing in the environment or .env file.");
+    console.error("Error: One or more ccaas configuration variables (HOST, COMPANY_ID, MENU_ID, TENANT) are missing in the environment or .env file.");
     process.exit(1);
 }
 // --- THIS IS THE ROBUST CORS FIX ---
@@ -63,7 +63,7 @@ app.get('/api/get-chat-token', (req, res) => {
     }
 });
 
-// NEW: Endpoint to provide Ujet configuration to the client
+// NEW: Endpoint to provide ccaas configuration to the client
 app.get('/api/ccaas-config', (req, res) => {
     res.json({
         host: host,
