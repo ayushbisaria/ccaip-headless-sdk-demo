@@ -41,6 +41,9 @@ The project is organized into two main directories:
 ```
 
 
+## Architecture 
+
+![alt text](https://github.com/ayushbisaria/ccaas-headless-sdk-demo/blob/main/architecture.png?raw=true)
 
 ## 📋 Prerequisites
 
