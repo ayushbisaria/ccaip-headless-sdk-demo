@@ -2,39 +2,43 @@
 @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap');
 :root {
     --primary-color: #007bff;
-    --user-bubble-color: #28a745;
-    --agent-bubble-color: #E9E9EB;
+    --user-bubble-color: #28a745; /* Green for user messages */
+    --agent-bubble-color: #E9E9EB; /* Light gray for agent messages */
     --window-background: #ffffff;
     --text-light: #ffffff;
     --text-dark: #333333;
-    /* New background color */
     --background-dark-theme: #1a1a1a;
+    --background-light-theme: #f8faff; /* Defined light theme background */
+    --text-muted: #6c757d; /* For secondary text like instructions */
+    --border-color-light: #e0e0e0; /* For general borders */
+    --shadow-light: rgba(0, 0, 0, 0.1);
+    --shadow-medium: rgba(0, 0, 0, 0.2);
 }
 
 /* ======================================================= */
-/* NEW ANIMATED DOT BACKGROUND                             */
+/* NEW ANIMATED DOT BACKGROUND & Overall Layout           */
 /* ======================================================= */
 body {
     font-family: 'Nunito', sans-serif;
     margin: 0;
-    /* Base color for the light theme */
-    background-color: var(--background-light-theme);
+    background-color: var(--background-light-theme); /* Base color for the light theme */
     
-    /* The dots are now semi-transparent black (rgba(0,0,0,0.1)) */
-    background-image: 
-        radial-gradient(rgba(0, 0, 0, 0.1) 1px, transparent 1px),
-        radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px);
+    /* Animated dot pattern */
+    background-image:
+        radial-gradient(rgba(0, 0, 0, 0.08) 1px, transparent 1px), /* Lighter dots */
+        radial-gradient(rgba(0, 0, 0, 0.06) 1px, transparent 1px); /* Even lighter dots */
     background-size: 30px 30px, 60px 60px;
     background-position: 0 0, 30px 30px;
+    animation: moveDots 10s linear infinite; /* Animation remains the same */
     
-    /* The animation remains the same */
-    animation: moveDots 10s linear infinite;
-    /* New Flexbox properties for centering */
+    /* Flexbox properties for centering content */
     display: flex;
     justify-content: center;
     align-items: center;
     min-height: 100vh;
+    overflow: hidden; /* Prevent body scroll if content overflows */
 }
+
 /* --- NEW: Entrance Animation Keyframes --- */
 @keyframes fadeIn {
     from {
@@ -46,6 +50,7 @@ body {
         transform: translateY(0);
     }
 }
+
 /* Keyframe animation that moves the background position */
 @keyframes moveDots {
    from {
@@ -58,27 +63,30 @@ body {
 
 .landing-container {
     text-align: center;
-    /* Entrance Animation */
-    animation: fadeIn 1s ease-out forwards;
+    animation: fadeIn 1s ease-out forwards; /* Entrance Animation */
+    padding: 20px; /* Add some padding for smaller screens */
 }
+
 .page-header h1 {
-    font-size: 4rem; /* Much larger font size */
-    font-weight: 900; /* Bolder font weight */
+    font-size: clamp(2.5rem, 8vw, 4rem); /* Responsive font size */
+    font-weight: 900;
     color: var(--text-dark);
     margin: 0;
     letter-spacing: -2px;
+    line-height: 1.1;
 }
 
 .page-header p {
-    font-size: 1.25rem;
+    font-size: clamp(1rem, 2.5vw, 1.25rem); /* Responsive font size */
     color: var(--text-muted);
     margin: 10px 0 20px 0;
 }
 
 .page-header .instructions {
-    font-size: 1rem;
-    color: #aab5c1;
+    font-size: 0.9rem;
+    color: var(--text-muted);
 }
+
 /* --- Chat Widget & Window --- */
 .chat-widget-button {
     position: fixed;
@@ -91,17 +99,18 @@ body {
     border-radius: 50%;
     border: none;
     cursor: pointer;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 4px 12px var(--shadow-medium);
     display: flex;
     justify-content: center;
     align-items: center;
-    font-size: 16px;
+    font-size: 1.2em; /* Icon size */
     font-weight: 600;
-    transition: transform 0.2s ease-in-out;
+    transition: transform 0.2s ease-in-out, background-color 0.2s;
     z-index: 999;
 }
 .chat-widget-button:hover {
     transform: scale(1.1);
+    background-color: #0056b3; /* Darker on hover */
 }
 
 .chat-window {
@@ -110,25 +119,71 @@ body {
     position: fixed;
     bottom: 30px;
     right: 30px;
-    width: 370px;
-    height: 70vh;
-    max-height: 600px;
+    width: 90%; /* Responsive width */
+    max-width: 450px; /* Increased max width for desktop */
+    height: 70vh; /* Responsive height */
+    max-height: 650px; /* Increased max height for desktop */
     background-color: var(--window-background);
     border-radius: 15px;
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+    box-shadow: 0 10px 30px var(--shadow-medium);
     overflow: hidden;
     z-index: 1000;
+    /* Removed for large screens to keep it at bottom-right */
+    /* left: 50%; */
+    /* transform: translateX(-50%); */
+    transition: all 0.3s ease-in-out; /* Smooth transition for open/close */
+}
+
+/* Responsive adjustments for chat window */
+@media (max-width: 480px) {
+    .chat-window {
+        width: 95%;
+        height: 90vh; /* Take up more height on smaller phones */
+        bottom: 10px; /* Closer to the bottom edge */
+        left: 2.5%; /* Adjust left/right for margin */
+        right: 2.5%;
+        transform: translateX(0); /* Ensure centering on small screens */
+        margin: 0 auto; /* Ensure horizontal centering */
+        border-radius: 10px; /* Slightly less rounded corners */
+    }
+    .chat-widget-button {
+        bottom: 20px;
+        right: 20px;
+        width: 50px;
+        height: 50px;
+        font-size: 1em;
+    }
 }
 
 /* --- Chat Header & Input Area --- */
 .chat-header {
     background: var(--primary-color);
     color: var(--text-light);
-    padding: 20px;
+    padding: 15px 20px; /* Reduced padding slightly */
     flex-shrink: 0;
-    text-align: center;
+    display: flex; /* Use flexbox for alignment */
+    justify-content: space-between;
+    align-items: center;
+    border-top-left-radius: 15px; /* Match window border-radius */
+    border-top-right-radius: 15px; /* Match window border-radius */
 }
 .chat-header h3 { margin: 0; font-size: 18px; }
+
+/* Style the close button */
+.close-chat-btn {
+    background: none; /* No background */
+    border: none;
+    color: var(--text-light);
+    cursor: pointer;
+    font-size: 1.5em; /* Larger X icon */
+    padding: 0;
+    opacity: 0.9;
+    transition: opacity 0.2s, transform 0.2s;
+}
+.close-chat-btn:hover {
+    opacity: 1;
+    transform: rotate(90deg); /* Little spin on hover */
+}
 
 .chat-input-area {
     display: flex;
@@ -145,10 +200,11 @@ body {
     padding: 12px 18px;
     font-size: 14px;
     font-family: 'Nunito', sans-serif;
+    transition: box-shadow 0.2s;
 }
 #chat-input:focus {
     outline: none;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.25); /* Improved focus ring */
 }
 #send-message-btn {
     background-color: var(--primary-color);
@@ -162,13 +218,19 @@ body {
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: background-color 0.2s;
+    transition: background-color 0.2s, transform 0.2s;
 }
-#send-message-btn:hover { background-color: #0056b3; }
+#send-message-btn:hover {
+    background-color: #0056b3;
+    transform: scale(1.05);
+}
+#send-message-btn:active {
+    transform: scale(0.95); /* Click feedback */
+}
 
 
 /* ======================================================= */
-/* NEW AND IMPROVED MESSAGE BUBBLE STYLES                  */
+/* IMPROVED MESSAGE BUBBLE STYLES & CONTAINER            */
 /* ======================================================= */
 
 .chat-messages {
@@ -176,106 +238,90 @@ body {
     padding: 20px;
     overflow-y: auto;
     background-color: #f0f2f5;
+    display: flex; /* Make it a flex container */
+    flex-direction: column; /* Stack messages vertically */
+    position: relative; /* Added for positioning scroll arrows */
 }
 
-/* This is the base style for ALL message paragraphs */
-.chat-messages p {
+/* Custom Scrollbar for chat messages */
+.chat-messages::-webkit-scrollbar {
+    width: 8px;
+}
+
+.chat-messages::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.chat-messages::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
+/* This is the base style for ALL message bubbles */
+.message-bubble {
     padding: 10px 15px;
     margin-bottom: 15px;
-    border-radius: 18px;
+    border-radius: 18px; /* Slightly less rounded corners for better tail integration */
     line-height: 1.5;
-    max-width: 80%;
+    max-width: 90%; /* Increased max-width for bubbles */
     word-wrap: break-word;
-    clear: both; /* Important for alignment */
-}
-.chat-messages p strong {
-    display: block;
-    font-size: 12px;
-    margin-bottom: 4px;
-    font-weight: 700;
-    opacity: 0.9;
-}
-
-
-
-/* This class will be for AGENT/SYSTEM messages (e.g., <p class="message-bubble agent">) */
-.chat-messages p.agent {
-    background-color: var(--agent-bubble-color); /* Light gray for agent messages */
-    color: var(--text-dark); /* Dark text for readability */
-    align-self: flex-start; /* Aligns the message bubble to the left side of the flex container */
-    border-bottom-left-radius: 5px; /* Adds a "tail" effect on the bottom-left corner */
-    margin-right: auto; /* Ensures it pushes itself to the left within the flex container */
-}
-
-/* This class will be for YOUR messages (e.g., <p class="message-bubble user">) */
-.chat-messages p.user {
-    background-color: var(--user-bubble-color); /* Green for user messages */
-    color: var(--text-light); /* White text for contrast */
-    align-self: flex-end; /* Aligns the message bubble to the right side of the flex container */
-    border-bottom-right-radius: 5px; /* Adds a "tail" effect on the bottom-right corner */
-    margin-left: auto; /* Ensures it pushes itself to the right within the flex container */
-}
-
-.message-bubble {
-    padding: 10px 15px; /* Comfortable padding inside the bubble */
-    border-radius: 18px; /* Rounded corners for a modern look */
-    line-height: 1.5; /* Good readability */
-    max-width: 80%; /* Limits the bubble width to prevent stretching across the chat */
-    word-wrap: break-word; /* Ensures long words break to the next line */
-    word-break: break-word; /* Fallback for word-wrap in some browsers */
-    box-sizing: border-box; /* Ensures padding and border are included in the element's total size */
-    
-    /* When used inside a flex-direction: column parent (like .chat-messages),
-       these settings ensure it acts as a block and gets its own "line". */
-    /* No need for 'float' or 'clear' when using flexbox for layout */
+    word-break: break-word; /* Fallback */
+    box-sizing: border-box;
+    box-shadow: 0 1px 2px var(--shadow-light); /* Subtle shadow for depth */
 }
 
 /* Optional: Styling for the sender's name/label inside the bubble */
 .message-bubble strong {
-    display: block; /* Ensures the name is on its own line above the message text */
+    display: block;
     font-size: 12px;
     margin-bottom: 4px;
     font-weight: 700;
-    opacity: 0.9;
+    opacity: 0.8; /* Slightly less opaque for sender name */
+    color: inherit; /* Inherit color from bubble */
 }
 
-/* This class will be for AGENT/SYSTEM messages (e.g., <p class="message-bubble agent">) */
-.message-bubble p.agent {
-    background-color: var(--agent-bubble-color); /* Light gray for agent messages */
-    color: var(--text-dark); /* Dark text for readability */
-    align-self: flex-start; /* Aligns the message bubble to the left side of the flex container */
-    border-bottom-left-radius: 5px; /* Adds a "tail" effect on the bottom-left corner */
-    margin-right: auto; /* Ensures it pushes itself to the left within the flex container */
+/* Styles for AGENT/SYSTEM messages */
+.message-bubble.agent {
+    background-color: var(--agent-bubble-color);
+    color: var(--text-dark);
+    align-self: flex-start; /* Aligns to the left */
+    border-bottom-left-radius: 5px; /* "Tail" effect */
+    margin-right: auto;
 }
 
-/* This class will be for YOUR messages (e.g., <p class="message-bubble user">) */
-.message-bubble p.user {
-    background-color: var(--user-bubble-color); /* Green for user messages */
-    color: var(--text-light); /* White text for contrast */
-    align-self: flex-end; /* Aligns the message bubble to the right side of the flex container */
-    border-bottom-right-radius: 5px; /* Adds a "tail" effect on the bottom-right corner */
-    margin-left: auto; /* Ensures it pushes itself to the right within the flex container */
+/* Styles for USER messages */
+.message-bubble.user {
+    background-color: var(--user-bubble-color);
+    color: var(--text-light);
+    align-self: flex-end; /* Aligns to the right */
+    border-bottom-right-radius: 5px; /* "Tail" effect */
+    margin-left: auto;
 }
+
 /* System message specific styles */
 .system-message {
-    background-color: #f0f0f0;
+    background-color: #e0e0e0; /* Softer gray */
     color: #555;
     text-align: center;
     padding: 8px 12px;
-    /* Use margin: auto for horizontal centering when parent is flex-column */
-    margin: 10px auto; 
+    margin: 10px auto;
     border-radius: 10px;
     font-size: 0.85em;
-    max-width: 80%;
+    max-width: 80%; /* Adjusted max-width for system messages */
     word-break: break-word;
-    /* Ensure it takes up full width for centering */
-    align-self: center; /* Override parent's align-items */
+    align-self: center;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05); /* Subtle shadow */
 }
-/* --- NEW STYLES FOR LOADER --- */
 
-/* The loader is a spinning circle */
+/* --- NEW STYLES FOR LOADER --- */
 .loader {
-    display: none; /* Hidden by default */
+    display: none;
     width: 24px;
     height: 24px;
     border: 3px solid rgba(255, 255, 255, 0.3);
@@ -284,7 +330,6 @@ body {
     animation: spin 1s ease-in-out infinite;
 }
 
-/* When the button has the .loading class, hide the icon and show the loader */
 .chat-widget-button.loading .chat-icon {
     display: none;
 }
@@ -292,72 +337,46 @@ body {
     display: block;
 }
 
-/* Prevent clicking the button while it's loading */
 .chat-widget-button:disabled {
     cursor: not-allowed;
-    background-color: #0056b3; /* Darker blue to indicate disabled state */
+    background-color: #0056b3;
 }
 
-
-/* Keyframe animation for the spinning loader */
 @keyframes spin {
     to {
         transform: rotate(360deg);
     }
 }
 
-/* ADD THIS CSS TO YOUR bestehenden style.css FILE */
-
-/* Update the chat-header to use flexbox for alignment */
-.chat-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-/* Style the new close button */
-.close-chat-btn {
-    background: red;
-    border: none;
-    color: white;
-    cursor: pointer;
-    padding: 5px;
-    opacity: 0.8;
-    transition: opacity 0.2s;
-}
-
-.close-chat-btn:hover {
-    opacity: 1;
-}
-
 /* ======================================================= */
-/* NEW, MORE BEAUTIFUL STYLES FOR INTERACTIVE BUTTONS      */
+/* IMPROVED STYLES FOR INTERACTIVE BUTTONS               */
 /* ======================================================= */
 
-/* This is the container for a group of buttons inside a message bubble */
+/* Container for a group of buttons inside a message bubble or content card */
 .button-group {
     margin-top: 12px;
     display: flex;
     flex-direction: column;
     gap: 8px; /* Spacing between buttons */
     align-items: flex-start; /* Aligns buttons to the start of the container */
+    width: 100%; /* Ensure button group takes full width inside its parent */
 }
 
-/* This is the new style for each individual button */
+/* Base style for each individual interactive button */
 .chat-button {
     background-color: var(--window-background);
-    border: 1px solid #e0e0e0;
+    border: 1px solid var(--border-color-light);
     color: var(--primary-color);
     padding: 10px 16px;
-    border-radius: 20px; /* More rounded for a softer look */
+    border-radius: 20px;
     cursor: pointer;
     text-align: center;
     font-family: 'Nunito', sans-serif;
-    font-weight: 700; /* Bolder text */
+    font-weight: 700;
     font-size: 14px;
-    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
-    /* Smooth transition for all changes */
+    box-shadow: 0 1px 2px var(--shadow-light);
     transition: all 0.2s ease-in-out;
+    width: 100%; /* Make buttons take full available width */
 }
 
 /* Style for when you hover over a clickable button */
@@ -365,8 +384,7 @@ body {
     background-color: var(--primary-color);
     color: var(--text-light);
     border-color: var(--primary-color);
-    /* "Lift" effect on hover */
-    transform: translateY(-2px);
+    transform: translateY(-2px); /* "Lift" effect */
     box-shadow: 0 4px 8px rgba(0, 123, 255, 0.2);
 }
 
@@ -376,113 +394,246 @@ body {
     border-color: #e9ecef;
     color: var(--text-muted);
     cursor: not-allowed;
-    opacity: 0.9;
+    opacity: 0.7; /* Slightly more opaque disabled state */
+    box-shadow: none; /* No shadow when disabled */
+    transform: none; /* No transform when disabled */
 }
 
-/* styles.css (add these or integrate into your existing styles) */
+/* ======================================================= */
+/* STYLES FOR RICH CONTENT CARDS                         */
+/* ======================================================= */
 
 .content-cards-container {
-    display: flex; /* Or display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); */
-    gap: 15px; /* Space between cards */
-    overflow-x: auto; /* Enable horizontal scrolling if cards overflow */
+    display: flex;
+    flex-direction: row; /* Keep cards in a row initially */
+    gap: 15px;
+    overflow-x: auto; /* Enable horizontal scrolling */
     padding: 10px;
-    flex-wrap: wrap; /* Allow cards to wrap to the next line if space is limited */
-    justify-content: flex-start; /* Align cards to the start */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    margin-top: 10px;
+    margin-bottom: 10px;
+    /* Custom Scrollbar for horizontal content cards */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: #888 #f1f1f1; /* Firefox */
 }
 
+/* Custom Scrollbar for content cards (Webkit) */
+.content-cards-container::-webkit-scrollbar {
+    height: 8px; /* For horizontal scrollbar */
+}
+
+.content-cards-container::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 10px;
+}
+
+.content-cards-container::-webkit-scrollbar-thumb {
+    background: #888;
+    border-radius: 10px;
+}
+
+.content-cards-container::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+
 .content-card {
-    border: 1px solid #e0e0e0;
-    border-radius: 8px;
+    border: 1px solid var(--border-color-light);
+    border-radius: 10px; /* Slightly more rounded */
     padding: 15px;
     background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    min-width: 280px; /* Minimum width for each card */
-    max-width: 350px; /* Maximum width for each card */
+    box-shadow: 0 4px 12px var(--shadow-light); /* More prominent shadow for cards */
+    min-width: 250px; /* Minimum width for each card */
+    max-width: 300px; /* Max width to keep them manageable */
     flex-shrink: 0; /* Prevent cards from shrinking */
     display: flex;
     flex-direction: column;
     justify-content: space-between; /* Pushes buttons to the bottom */
-    margin-bottom: 10px; /* Space below cards if wrapping */
+    transition: transform 0.2s ease-in-out; /* Add hover effect */
+}
+
+.content-card:hover {
+    transform: translateY(-3px); /* Slight lift on hover */
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15); /* Enhanced shadow on hover */
 }
 
 .content-card img {
     max-width: 100%;
     height: auto;
-    border-radius: 4px;
-    margin-bottom: 10px;
+    border-radius: 6px; /* Match card rounding */
+    margin-bottom: 12px; /* Slightly more space */
+    object-fit: cover; /* Ensures image covers area without distortion */
 }
 
 .content-card h3 {
     margin-top: 0;
-    margin-bottom: 5px;
-    color: #333;
-    font-size: 1.1em;
+    margin-bottom: 8px; /* More space below title */
+    color: var(--text-dark);
+    font-size: 1.15em; /* Slightly larger title */
+    font-weight: 700;
+    line-height: 1.3;
 }
 
 .content-card-subtitle {
-    font-size: 0.9em;
-    color: #666;
-    margin-bottom: 5px;
+    font-size: 0.95em; /* Slightly larger subtitle */
+    color: var(--text-muted);
+    margin-bottom: 10px; /* More space below subtitle */
+    line-height: 1.4;
 }
 
 .content-card-body {
-    font-size: 0.85em;
+    font-size: 0.9em; /* Slightly larger body text */
     color: #555;
-    flex-grow: 1; /* Allows body to take up available space */
-    margin-bottom: 10px;
+    flex-grow: 1;
+    margin-bottom: 15px; /* More space above buttons/link */
+    line-height: 1.5;
 }
 
-.content-card a {
-    display: inline-block;
-    margin-top: 10px;
-    color: #007bff;
+.content-card a.card-link { /* Specific class for main card link */
+    display: block; /* Make link a block for better click area */
+    margin-top: auto; /* Push link to bottom if it's the last element before buttons */
+    margin-bottom: 10px; /* Space between link and buttons */
+    color: var(--primary-color);
     text-decoration: none;
     font-weight: bold;
+    font-size: 0.9em;
+    align-self: flex-start; /* Align link to left within card */
 }
 
-.content-card a:hover {
+.content-card a.card-link:hover {
     text-decoration: underline;
 }
 
 .content-card .button-group {
-    display: flex;
-    flex-direction: column; /* Stack buttons vertically within a card */
-    gap: 8px;
-    margin-top: 10px;
+    margin-top: 0; /* Reset margin as it's within a card */
+    padding-top: 10px; /* Add padding from content above */
+    border-top: 1px solid #f0f0f0; /* Separator for buttons */
 }
 
 .content-card .chat-button {
-    padding: 8px 12px;
-    border-radius: 5px;
-    border: 1px solid;
-    cursor: pointer;
+    padding: 10px 15px; /* Consistent padding */
+    border-radius: 18px; /* Rounded buttons within card */
     font-size: 0.9em;
-    text-align: center;
-    width: 100%;
+    width: 100%; /* Full width within card */
+    box-shadow: none; /* No extra shadow on buttons within cards */
 }
 
 .content-card .chat-button.button-style-primary {
-    background-color: #007bff;
-    color: white;
-    border-color: #007bff;
+    background-color: var(--primary-color);
+    color: var(--text-light);
+    border-color: var(--primary-color);
 }
 
 .content-card .chat-button.button-style-primary:hover:not(:disabled) {
     background-color: #0056b3;
     border-color: #0056b3;
+    transform: translateY(-1px); /* Slight lift */
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.15); /* Subtle shadow */
 }
 
 .content-card .chat-button.button-style-secondary {
     background-color: #f8f9fa;
-    color: #007bff;
-    border-color: #007bff;
+    color: var(--primary-color);
+    border-color: var(--primary-color); /* Secondary buttons also use primary color border */
 }
 
 .content-card .chat-button.button-style-secondary:hover:not(:disabled) {
     background-color: #e2e6ea;
+    transform: translateY(-1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
 .content-card .chat-button:disabled {
     opacity: 0.6;
     cursor: not-allowed;
+    background-color: #f0f0f0; /* Disabled background */
+    color: #aaa; /* Disabled text color */
+    border-color: #ddd;
+    transform: none;
+    box-shadow: none;
+}
+
+/* Optional: File attachment preview styles */
+.file-attachment-preview {
+    max-width: 100%;
+    height: auto;
+    border-radius: 8px;
+    margin-top: 8px;
+    display: block;
+}
+
+/* Placeholder for image attachments in chat bubbles */
+.message-bubble img.message-image {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 5px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+}
+
+.message-bubble img.message-image:hover {
+    transform: scale(1.02);
+}
+
+/* Placeholder for video attachments in chat bubbles */
+.message-bubble video.message-video {
+    max-width: 100%;
+    height: auto;
+    border-radius: 10px;
+    margin-top: 5px;
+    background-color: black; /* Placeholder background */
+}
+
+/* Styles for loading/typing indicators if implemented */
+.typing-indicator {
+    font-size: 0.8em;
+    color: #888;
+    margin-bottom: 10px;
+    text-align: left;
+    padding-left: 15px;
+}
+
+/* ======================================================= */
+/* NEW STYLES FOR SCROLL NAVIGATION ARROWS               */
+/* ======================================================= */
+
+.scroll-arrow {
+    position: absolute;
+    top: 50%; /* Vertically center */
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.6); /* Semi-transparent background */
+    color: white;
+    font-size: 1.5em;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 10; /* Ensure it's above cards */
+    opacity: 0.8;
+    transition: background-color 0.2s, opacity 0.2s;
+    user-select: none; /* Prevent text selection */
+}
+
+.scroll-arrow:hover {
+    background-color: rgba(0, 0, 0, 0.8);
+    opacity: 1;
+}
+
+.scroll-arrow-left {
+    left: 5px; /* Position from left edge */
+}
+
+.scroll-arrow-right {
+    right: 5px; /* Position from right edge */
+}
+
+/* Hide arrows on very small screens to avoid clutter */
+@media (max-width: 350px) {
+    .scroll-arrow {
+        display: none;
+    }
 }

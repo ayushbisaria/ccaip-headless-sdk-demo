@@ -326,7 +326,7 @@ async function initializeChatApp() {
 
     client.on("chat.updated", (chat) => {
         console.log("Updated chat:", chat);
-        if (chat.state.status && chat.connected && chat.state.status_text) {
+        if (chat.state.status && chat.state.status_text) {
             console.log("Info: %s",chat.state.status);
             const systemMessage = document.createElement('div');
             systemMessage.classList.add('system-message');
@@ -356,6 +356,10 @@ async function initializeChatApp() {
         }
         if (message.type === 'noti' && message.event === 'escalationAccepted') {
             console.log("Info: Human Accepted");
+            return;
+        }
+        if (message.type === 'noti' && message.event === 'chatEnded') {
+            console.log("Info: end session triggered");
             return;
         }
         appendMessage(message);
