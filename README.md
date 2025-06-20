@@ -141,6 +141,27 @@ If you prefer to start each component individually, or if you encounter issues w
 
 ---
 
+## ⚙️ Headless Web SDK Methods/Events Utilized
+
+The client-side code (main.js) extensively utilizes various methods and listens for events provided by the CCAAS Headless web SDK to manage the chat lifecycle and interactions. Below is a summary of the key methods and events implemented in this demo:
+
+### Methods Used:
+
+* `createChat`: Initiates a new chat session with the CCAAS platform.
+* `finishChat`: Ends an ongoing chat session.
+* `fetchMessages`: Retrieves the history of messages for the current chat.
+* `sendTextMessage`: Sends a plain text message from the user.
+* `sendFileMessage`: Sends a file (e.g., image, video) as an attachment in the chat.
+
+### Events Used:
+
+* `ready`: Fired when the SDK is successfully initialized and ready for interaction.
+* `authenticated`: Indicates that the client has been successfully authenticated with the CCAAS platform.
+* `chat.ongoing`: Triggered when a chat session transitions to an ongoing state.
+* `chat.message`: Fired when a new message (text, file, custom payload) is received in the chat.
+* `chat.update`: Provides updates on the chat session status or properties.
+* `chat.connected`: Indicates that the chat connection has been successfully established.
+
 ## 💡 Technical Notes
 
 * The client-side `main.js` fetches the CCaaS configuration (`host`, `companyId`, `menuId`, `tenant`) and the JWT authentication token from the Node.js backend(server). This prevents hardcoding sensitive or environment-specific ccaas SDK details directly in the client-side bundle.
