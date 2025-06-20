@@ -1,13 +1,13 @@
-# CCAAS Headless SDK Chat Demo
+# CCAI-Platform Headless SDK Chat Demo
 
-This repository contains a demonstration of a chat application built using a CCAAS (Contact Center as a Service) Headless SDK. It showcases a basic client-server architecture where the Node.js backend handles secure authentication and configuration delivery, while the pure JavaScript frontend provides the chat user interface.
+This repository contains a demonstration of a chat application built using a ccai-platform Headless SDK. It showcases a basic client-server architecture where the Node.js backend handles secure authentication and configuration delivery, while the pure JavaScript frontend provides the chat user interface.
 
 ## 🚀 Features
 
 * **Client-Server Architecture:** Separated frontend and backend for clear responsibilities.
-* **Secure Authentication:** Backend (`server.js`) generates signed JSON Web Tokens (JWTs) for client authentication with the CCAAS SDK.
-* **Dynamic Configuration:** Backend provides necessary ccaas SDK configuration variables to the client, loaded securely from environment variables.
-* **Chat Interface:** A simple web-based chat interface (`main.js`, `index.html`, `style.css`) for interacting with the CCAAS platform.
+* **Secure Authentication:** Backend (`server.js`) generates signed JSON Web Tokens (JWTs) for client authentication with the headless SDK.
+* **Dynamic Configuration:** Backend provides necessary SDK configuration variables to the client, loaded securely from environment variables.
+* **Chat Interface:** A simple web-based chat interface (`main.js`, `index.html`, `style.css`) for interacting with the ccai platform.
 * **Message Handling:** Displays text messages, file messages, inline buttons, and rich content cards received from the SDK.
 * **File Attachment:** Supports sending image and video attachments.
 * **Environment Variable Management:** Utilizes `server/config/.env` files for managing sensitive and environment-specific configurations.
@@ -42,7 +42,7 @@ The project is organized into two main directories:
 
 ## 🏗️ Architecture
 
-![alt text](https://github.com/ayushbisaria/ccaas-headless-sdk-demo/blob/main/architecture.png?raw=true)
+![alt text](https://github.com/ayushbisaria/ccaip-headless-sdk-demo/blob/main/architecture.png?raw=true)
 
 ## 📋 Prerequisites
 
@@ -57,8 +57,8 @@ Follow these steps to get the demo up and running on your local machine:
 
 1.  **Clone the Repository:**
     ```bash
-    git clone [https://github.com/ayushbisaria/ccaas-headless-sdk-demo.git)
-    cd ccaas-headless-sdk-demo
+    git clone [https://github.com/ayushbisaria/ccaip-headless-sdk-demo.git)
+    cd ccaip-headless-sdk-demo
     ```
 2.  **Backend Setup:**
     Navigate into the `server` directory, install its dependencies, and set up its environment variables.
@@ -74,11 +74,11 @@ Follow these steps to get the demo up and running on your local machine:
 
     ```dotenv
     # server/.env
-    COMPANY_SECRET="YOUR_CCAAS_COMPANY_SECRET_FROM_CCAAS_DEVELOPER_SETTINGS"
-    HOST="YOUR_CCAAS_HOST"
-    COMPANY_ID="YOUR_CCAAS_COMPANY_ID_FROM_CCAAS_DEVELOPER_SETTINGS"
+    COMPANY_SECRET="YOUR_CCAIP_COMPANY_SECRET_FROM_CCAIP_DEVELOPER_SETTINGS"
+    HOST="YOUR_CCAIP_HOST"
+    COMPANY_ID="YOUR_CCAIP_COMPANY_ID_FROM_CCAIP_DEVELOPER_SETTINGS"
     MENU_ID="YOUR_QUEUE_ID" # e.g., "23"
-    TENANT="YOUR_CCAAS_TENANT_NAME" 
+    TENANT="YOUR_CCAIP_TENANT_NAME" 
     ```
 
 3.  **Frontend Setup:**
@@ -108,7 +108,7 @@ There are two ways to run the application:
 
 This method uses `concurrently` to start both the backend and frontend simultaneously. This is the easiest way to get everything running.
 
-1.  From the **root directory** of your project (`ccaas-headless-sdk-demo/`), run:
+1.  From the **root directory** of your project (`ccaip-headless-sdk-demo/`), run:
     ```bash
     npm install
     npm run dev
@@ -143,11 +143,11 @@ If you prefer to start each component individually, or if you encounter issues w
 
 ## ⚙️ Headless Web SDK Methods/Events Utilized
 
-The client-side code (main.js) extensively utilizes various methods and listens for events provided by the [CCAAS Headless web SDK](https://cloud.google.com/contact-center/ccai-platform/docs/headless-web-guide) to manage the chat lifecycle and interactions. Below is a summary of the key methods and events implemented in this demo:
+The client-side code (main.js) extensively utilizes various methods and listens for events provided by the [Headless web SDK](https://cloud.google.com/contact-center/ccai-platform/docs/headless-web-guide) to manage the chat lifecycle and interactions. Below is a summary of the key methods and events implemented in this demo:
 
 ### Methods Used:
 
-* `createChat`: Initiates a new chat session with the CCAAS platform.
+* `createChat`: Initiates a new chat session with the ccai platform.
 * `finishChat`: Ends an ongoing chat session.
 * `fetchMessages`: Retrieves the history of messages for the current chat.
 * `sendTextMessage`: Sends a plain text message from the user.
@@ -156,7 +156,7 @@ The client-side code (main.js) extensively utilizes various methods and listens 
 ### Events Used:
 
 * `ready`: Fired when the SDK is successfully initialized and ready for interaction.
-* `authenticated`: Indicates that the client has been successfully authenticated with the CCAAS platform.
+* `authenticated`: Indicates that the client has been successfully authenticated with the ccai platform.
 * `chat.ongoing`: Triggered when a chat session transitions to an ongoing state.
 * `chat.message`: Fired when a new message (text, file, custom payload) is received in the chat.
 * `chat.update`: Provides updates on the chat session status or properties.
@@ -164,7 +164,7 @@ The client-side code (main.js) extensively utilizes various methods and listens 
 
 ## 💡 Technical Notes
 
-* The client-side `main.js` fetches the CCaaS configuration (`host`, `companyId`, `menuId`, `tenant`) and the JWT authentication token from the Node.js backend(server). This prevents hardcoding sensitive or environment-specific ccaas SDK details directly in the client-side bundle.
+* The client-side `main.js` fetches the ccai-platform configuration (`host`, `companyId`, `menuId`, `tenant`) and the JWT authentication token from the Node.js backend(server). This prevents hardcoding sensitive or environment-specific SDK details directly in the client-side bundle.
 * The `server.js` uses `dotenv` to load configurations from its `config/.env` file, ensuring secrets are not exposed in the codebase.
 * The `package-lock.json` files in both `server/` and `client/` are committed to the repository to ensure consistent dependency installations across all environments.
 
@@ -181,7 +181,7 @@ The client-side code (main.js) extensively utilizes various methods and listens 
 * **Frontend:**
     * HTML, CSS, JavaScript (Vanilla JS)
     * [Vite](https://vitejs.dev/) (as the development server and build tool)
-    * [@ujet/websdk-headless](https://www.npmjs.com/package/@ujet/websdk-headless) (CCAAS Headless SDK)
+    * [@ujet/websdk-headless](https://www.npmjs.com/package/@ujet/websdk-headless) ( Headless Web SDK)
 * **Project Management:**
     * [npm](https://www.npmjs.com/)
     * [concurrently](https://www.npmjs.com/package/concurrently) (for running multiple scripts)
