@@ -143,7 +143,7 @@ If you prefer to start each component individually, or if you encounter issues w
 
 ## ⚙️ Headless Web SDK Methods/Events Utilized
 
-The client-side code (main.js) extensively utilizes various methods and listens for events provided by the CCAAS Headless web SDK to manage the chat lifecycle and interactions. Below is a summary of the key methods and events implemented in this demo:
+The client-side code (main.js) extensively utilizes various methods and listens for events provided by the [CCAAS Headless web SDK](https://cloud.google.com/contact-center/ccai-platform/docs/headless-web-guide) to manage the chat lifecycle and interactions. Below is a summary of the key methods and events implemented in this demo:
 
 ### Methods Used:
 
