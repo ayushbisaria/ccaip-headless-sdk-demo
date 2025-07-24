@@ -13,6 +13,13 @@
     --border-color-light: #e0e0e0; /* For general borders */
     --shadow-light: rgba(0, 0, 0, 0.1);
     --shadow-medium: rgba(0, 0, 0, 0.2);
+
+      /* New variables for screenshot buttons */
+    --screenshot-button-bg: #e0f2ff; /* Light blue */
+    --screenshot-button-border: #007bff; /* Primary blue */
+    --screenshot-button-text: #007bff; /* Primary blue */
+    --screenshot-button-hover-bg: #cce7ff; /* Slightly darker light blue on hover */
+    --screenshot-button-shadow: rgba(0, 123, 255, 0.1);
 }
 
 /* ======================================================= */
@@ -637,3 +644,62 @@ body {
         display: none;
     }
 }
+
+/* ======================================================= */
+/* NEW STYLES FOR SCREENSHOT BUTTONS                     */
+/* ======================================================= */
+
+/* Container for the buttons from the screenshot */
+.chat-options-group {
+    background-color: var(--window-background);
+    border-radius: 12px;
+    box-shadow: 0 4px 15px var(--shadow-medium);
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px; /* Spacing between buttons */
+    margin: 20px auto; /* Center the group and add vertical space */
+    max-width: 350px; /* Limit width for better appearance */
+    width: 100%; /* Ensure it's responsive */
+    box-sizing: border-box; /* Include padding in width calculation */
+}
+
+/* Style for individual buttons within the screenshot group */
+.chat-option-button {
+    background-color: var(--screenshot-button-bg);
+    border: 1px solid var(--screenshot-button-border);
+    color: var(--screenshot-button-text);
+    padding: 12px 20px;
+    border-radius: 8px; /* Less rounded than chat-button, matching screenshot */
+    cursor: pointer;
+    text-align: center;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 600; /* Slightly less bold than default chat buttons */
+    font-size: 1.0em; /* Clear readable font size */
+    box-shadow: 0 2px 5px var(--screenshot-button-shadow); /* Subtle shadow */
+    transition: background-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    width: 100%; /* Make buttons fill the width of their container */
+    box-sizing: border-box; /* Include padding and border in width */
+}
+
+.chat-option-button:hover:not(:disabled) {
+    background-color: var(--screenshot-button-hover-bg);
+    transform: translateY(-1px); /* Slight lift on hover */
+    box-shadow: 0 4px 8px var(--screenshot-button-shadow); /* Enhanced shadow on hover */
+}
+
+.chat-option-button:active {
+    transform: translateY(0); /* Press down effect */
+    box-shadow: 0 1px 3px var(--screenshot-button-shadow);
+}
+
+.chat-option-button:disabled {
+    background-color: #f0f0f0;
+    border-color: #ccc;
+    color: #999;
+    cursor: not-allowed;
+    opacity: 0.7;
+    box-shadow: none;
+    transform: none;
+}
+

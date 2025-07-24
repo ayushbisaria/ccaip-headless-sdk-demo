@@ -58,7 +58,7 @@ async function initializeChatApp() {
     const chatInput = document.getElementById("chat-input");
     const messagesDiv = document.getElementById("chat-messages");
     const closeChatBtn = document.getElementById("closeChatBtn"); // Assuming you have this ID in your HTML
-
+    
     // Global variable to store the currently attached file
     let currentAttachedFile = null;
 
@@ -285,7 +285,9 @@ async function initializeChatApp() {
         } else {
             if (message.identity && message.identity.is_customer) {
                 p.classList.add('user');
-                p.textContent = message.text || message.content;
+                const senderName = (message.identity && message.identity.display_name) || 'You';
+                //p.textContent = message.text || message.content;
+                p.innerHTML = `<strong>${senderName}:</strong> ${message.text || message.content}`;
             } else {
                 p.classList.add('agent');
                 const senderName = (message.identity && message.identity.display_name) || 'Agent';
@@ -326,6 +328,70 @@ async function initializeChatApp() {
 
     client.on("chat.updated", (chat) => {
         console.log("Updated chat:", chat);
+        if (chat.state.status === 'dismissed') {
+            console.log("Info: %s", chat.state.status);
+        
+            // 1. Create the container for all the option buttons
+            const chatOptionsGroup = document.createElement('div');
+            chatOptionsGroup.classList.add('chat-options-group');
+        
+            // Define the texts for your buttons
+            const buttonTexts = [
+                "Continue conversation",
+                "Start a new conversation",
+                "Exit chat"
+            ];
+        
+            // 2. Iterate through the button texts and create a button for each
+            buttonTexts.forEach(text => {
+                const button = document.createElement('button'); // Use <button> element
+                button.classList.add('chat-option-button'); // Apply the CSS class
+                button.textContent = text; // Set the button text
+            
+                // Add event listeners based on the button text
+                if (text === "Continue conversation") {
+                    button.addEventListener('click', async () => {
+                        console.log("Continue conversation button clicked.");
+                        try {
+                            await client.resumeChat(chat.state.id); // Call client.resumeChat
+                            console.log("[Info] Chat resumed successfully.");
+                        } catch (e) {
+                            if (e.status === 409) {
+                                console.warn("Could not resume chat: Chat is already active or in a conflicting state (409)."); 
+                                return;
+                            }
+                        }       
+                    });
+                } else if (text === "Exit chat") {
+                    button.addEventListener('click', () => {
+                        console.log("Exit chat button clicked.");
+                        client.finishChat(); // Call client.finishChat
+                    });
+                } else if (text === "Start a new conversation") { // New condition for "Start a new conversation"
+                    button.addEventListener('click', async () => { // Made event listener async
+                        console.log("Start a new conversation button clicked.");
+                        await client.destroyChat(); // Await destroyChat to ensure it completes
+                        startChat(); // Call the startChat() function only after destroyChat is done
+                });
+                }
+                else {
+                    // For other buttons, you can add generic or specific handlers if needed
+                    button.addEventListener('click', () => {
+                        console.log(`${text} button clicked.`);
+                        // Add other logic here if needed for "Download transcript"
+                    });
+                }
+            
+                // 3. Append each created button to the chatOptionsGroup container
+                chatOptionsGroup.appendChild(button);
+            });
+        
+            // 4. Append the entire chatOptionsGroup to the messagesDiv
+            messagesDiv.appendChild(chatOptionsGroup);
+        
+            // Scroll to the bottom to show the new buttons
+            messagesDiv.scrollTop = messagesDiv.scrollHeight;
+        }
         if (chat.state.status && chat.state.status_text) {
             console.log("Info: %s",chat.state.status);
             const systemMessage = document.createElement('div');
@@ -360,6 +426,10 @@ async function initializeChatApp() {
         }
         if (message.type === 'noti' && message.event === 'chatEnded') {
             console.log("Info: end session triggered");
+            return;
+        }
+        if (message.content === 'Email_Input') {
+            console.log("Info: Email Input Triggered, Activate Email Flow");
             return;
         }
         appendMessage(message);
