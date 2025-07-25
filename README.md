@@ -51,7 +51,7 @@ Before you begin, ensure you have the following installed on your system:
 * [**Node.js**](https://nodejs.org/en/download/) (LTS version recommended)
 * [**npm**](https://www.npmjs.com/get-npm) (comes with Node.js)
 * [**CCAIP Instance**]: You must have an existing ccaip instance. At least one queue should be configured and integrated with a Dialogflow CX agent, and at least one human agent should be assigned to same queue. Make sure to note the queue ID, as it will be required in the SDK configuration as menuID.
-* [**DFCX Agent**]: You can refer uploaded dfcx agent blob at [here](https://github.com/ayushbisaria/ccaip-headless-sdk-demo/blob/main/example/sample_dfcx_agent_zip/exported_agent_VA - Demo CCAIP Custom Payloads.zip), restore it in your dfcx console and integrate it with ccai-platform web queue. This agent contains [samples of different ccaip custom payloads](https://cloud.google.com/contact-center/ccai-platform/docs/va-custom-payload) (like inline_buttons, content cards etc.) implemented within page intent routes.
+* [**DFCX Agent**]: You can refer uploaded dfcx agent blob at [here](https://github.com/ayushbisaria/ccaip-headless-sdk-demo/blob/main/example/sample_dfcx_agent_zip/), restore it in your dfcx console and integrate it with ccai-platform web queue. This agent contains [samples of different ccaip custom payloads](https://cloud.google.com/contact-center/ccai-platform/docs/va-custom-payload) (like inline_buttons, content cards etc.) implemented within page intent routes.
 
 ## 🚀 Setup & Installation
 
