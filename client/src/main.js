@@ -428,10 +428,6 @@ async function initializeChatApp() {
             console.log("Info: end session triggered");
             return;
         }
-        if (message.content === 'Email_Input') {
-            console.log("Info: Email Input Triggered, Activate Email Flow");
-            return;
-        }
         appendMessage(message);
     });
 
