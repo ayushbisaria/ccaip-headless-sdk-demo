@@ -11,7 +11,9 @@ const companySecret = process.env.COMPANY_SECRET;
 const host = process.env.HOST;
 const companyId = process.env.COMPANY_ID;
 const menuId = process.env.MENU_ID; // This will be a string
+const menuKey = process.env.MENU_KEY; // This will be a string
 const tenant = process.env.TENANT;
+const userId = process.env.USER_ID;
 
 // Ensure companySecret is loaded
 if (!companySecret) {
@@ -50,7 +52,7 @@ app.get('/api/get-chat-token', (req, res) => {
             nbf: now,
             iat: now,
             exp: expiresIn,
-            identifier: "67d8558d1371b8e8e"
+            identifier: userId
         };
 
         const token = jwt.sign(payload, companySecret, { algorithm: 'HS256' });
@@ -69,6 +71,7 @@ app.get('/api/ccaas-config', (req, res) => {
         host: host,
         companyId: companyId,
         menuId: parseInt(menuId, 10), // Convert menuId to a number
+        menuKey: menuKey,
         tenant: tenant
     });
 });

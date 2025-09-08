@@ -1,4 +1,6 @@
 import { Client } from "@ujet/websdk-headless";
+//import {Logger, consoleLoggerHandler } from '@ujet/websdk-headless'
+//Logger.addHandler(consoleLoggerHandler)
 
 // --- 1. CONFIGURATION (Will be fetched from server) ---
 let ccaasConfig = {}; // Object to hold the fetched configuration
@@ -9,7 +11,7 @@ async function authenticate() {
     try {
         const resp = await fetch("http://localhost:3000/api/get-chat-token");
         if (!resp.ok) throw new Error('Failed to fetch auth token');
-        console.log("Auth done");
+        console.log("[Info] Auth done");
         return await resp.json();
     } catch (error) {
         console.error("Authentication Error:", error);
@@ -23,7 +25,7 @@ async function fetchCcaasConfig() {
         const resp = await fetch("http://localhost:3000/api/ccaas-config");
         if (!resp.ok) throw new Error('Failed to fetch ccaas configuration');
         ccaasConfig = await resp.json();
-        console.log("ujet Configuration fetched:", ccaasConfig);
+        console.log("[Info] CCaaS Configuration fetched:", ccaasConfig);
     } catch (error) {
         console.error("Error fetching ccaas configuration:", error);
         throw error; // Re-throw to stop further execution if config is critical
@@ -61,15 +63,19 @@ async function initializeChatApp() {
     
     // Global variable to store the currently attached file
     let currentAttachedFile = null;
+    const queue = await client.getMenus(ccaasConfig.menuKey);
+    console.log("[Info] queue/menu id:", queue.menus[0].id);
 
+    const chatHistory = await client.getChatHistory(1);
     // --- 5. CORE FUNCTIONS ---
     function startChat() {
-        console.log("Attempting to create chat...");
+        console.log("[Info] Attempting to create chat...");
         chatWindow.style.display = 'flex';
         startChatBtn.style.display = 'none';
         messagesDiv.innerHTML = '<div class="system-message">Connecting...</div>';
         // Use the menuId from the fetched configuration
-        client.createChat(ccaasConfig.menuId)
+        //client.createChat(ccaasConfig.menuId)
+        client.createChat(queue.menus[0].id)
             .catch(error => {
                 console.error("Error creating chat:", error);
                 messagesDiv.innerHTML = '<div class="system-message">Error: Could not start chat.</div>';
@@ -301,33 +307,45 @@ async function initializeChatApp() {
 
 
     // --- 6. SDK EVENT LISTENERS ---
+    client.on("authenticated", () => {
+        console.log("[Event] **** client is authenticated****")
+    });
+    
     client.on("ready", () => {
-        console.log("**** client is ready****")
-    })
+        console.log("[Event] **** client is ready****")
+    });
 
     client.on("chat.connected", () => {
-        console.log("Chat connected.");
+        console.log("[Event] Chat connected.");
         messagesDiv.innerHTML = '';
         const systemMessage = document.createElement('div');
         systemMessage.classList.add('system-message');
         systemMessage.textContent = 'Chat session started';
         messagesDiv.appendChild(systemMessage);
-        
+        // Chat History
+        console.log("[Info] chat history:",chatHistory);
         client.fetchMessages().then(messages => {
+            console.log("[Info] Messages: ",messages);
             messages.forEach(appendMessage);
         });
     });
 
+    client.on("chat.memberLeft", (identity) => {
+        console.log("[Event] Chat.memberLeft");
+        console.log(identity)
+    });
+
     client.on("chat.memberJoined", (identity) => {
-      console.log(identity)
-    })
+        console.log("[Event] Chat.memberJoined");
+        console.log(identity)
+    });
 
     client.on('chat.ongoing', (chat) => {
-        console.log("Ongoing chat detected:", chat);
+        console.log("[Event] Ongoing chat detected:", chat);
     });
 
     client.on("chat.updated", (chat) => {
-        console.log("Updated chat:", chat);
+        console.log("[Event] Updated chat:", chat);
         if (chat.state.status === 'dismissed') {
             console.log("Info: %s", chat.state.status);
         
@@ -393,7 +411,7 @@ async function initializeChatApp() {
             messagesDiv.scrollTop = messagesDiv.scrollHeight;
         }
         if (chat.state.status && chat.state.status_text) {
-            console.log("Info: %s",chat.state.status);
+            console.log("[Info] %s",chat.state.status);
             const systemMessage = document.createElement('div');
             systemMessage.classList.add('system-message');
             const rawStatusText = chat.state.status_text;
@@ -407,7 +425,7 @@ async function initializeChatApp() {
     });
 
     client.on("chat.message", (message) => {
-        console.log("Event: chat.message", message);
+        console.log("[Event] chat.message", message);
         if (message.$userType === 'end_user') {
             console.log("Info: Ignoring echo of user's own message.");
             return;
@@ -432,14 +450,14 @@ async function initializeChatApp() {
     });
 
     client.on("chat.ended", () => {
-        console.log("The chat session has ended.");
+        console.log("[Event] The chat session has ended.");
         chatWindow.style.display = 'none';
         startChatBtn.style.display = 'block';
     });
 
     closeChatBtn.addEventListener("click", () => {
         if (client.chat) {
-            console.log("Close button clicked. Ending chat...");
+            console.log("[Info] Close button clicked. Ending chat...");
             client.finishChat();
         }
     });
@@ -481,7 +499,7 @@ async function initializeChatApp() {
         }
     });
 
-    console.log("Client initialized. Ready to start chat.");
+    console.log("[Info] Client initialized. Ready to start chat.");
 }
 
 // Call the initialization function when the DOM is fully loaded
